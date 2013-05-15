@@ -174,5 +174,5 @@ PyAPI_FUNC(PyObject*) _Py_Mangle(PyObject *p, PyObject *name);
 #else
 #define PyDoc_STR(str) ""
 #endif
-
+#include "kao.h"
 #endif /* !Py_PYTHON_H */
