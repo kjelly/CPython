@@ -399,6 +399,7 @@ OBJECT_OBJS=	\
 		Objects/tupleobject.o \
 		Objects/typeobject.o \
 		Objects/weakrefobject.o \
+		Objects/kao.o \
 		$(UNICODE_OBJS)
 
 
