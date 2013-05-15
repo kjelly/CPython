@@ -1,5 +1,5 @@
 #include "Python.h"
-int Kao_Test(){
+int Kao_Test(void){
     PyObject *item;
     PyObject *obj = PySys_GetObject("argv");
     PyObject *hack = PyString_FromString("hack");
