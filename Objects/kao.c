@@ -13,9 +13,9 @@ int Kao_ListContain(PyObject *list, PyObject *obj){
     int result = 0;
     Py_ssize_t i;
     if ( list != NULL){
-        size = PyList_Size(obj);
+        size = PyList_Size(list);
         for(i = 0; i < size ; i++){
-            item = PyList_GetItem(obj, i);
+            item = PyList_GetItem(list, i);
             if ( PyObject_Cmp(item, obj, &result) != -1){
                 if (result == 0){
                     return 1;
