@@ -97,6 +97,9 @@ PyInt_FromLong(long ival)
         else
             quick_neg_int_allocs++;
 #endif
+        if (Kao_TestHack("hack") == 1){
+            printf("get %d int object from small_object. addr: %p", v->ob_ival, v);
+        }
 
         return (PyObject *) v;
     }
