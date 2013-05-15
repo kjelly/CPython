@@ -1,22 +1,28 @@
 #include "Python.h"
-int Kao_Test(void){
+int Kao_TestHack(char* name){
+    
+    PyObject *list = PySys_GetObject("argv");
+    PyObject *obj = PyString_FromString(name);
+    return Kao_ListContain(list, obj);
+}
+
+
+int Kao_ListContain(PyObject *list, PyObject *obj){
     PyObject *item;
-    PyObject *obj = PySys_GetObject("argv");
-    PyObject *hack = PyString_FromString("hack");
     Py_ssize_t size;
-    int flag = 0;
     int result = 0;
+    Py_ssize_t i;
     if ( obj != NULL){
         size = PyList_Size(obj);
-        Py_ssize_t i;
         for(i = 0; i < size ; i++){
             item = PyList_GetItem(obj, i);
-            if ( PyObject_Cmp(item, hack, &result) != -1){
+            if ( PyObject_Cmp(item, obj, &result) != -1){
                 if (result == 0){
-                    flag = 1;
+                    return 1;
                 }
             }
         }
     }
-    return flag;
+    return 0;
+    
 }

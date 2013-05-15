@@ -97,6 +97,7 @@ PyInt_FromLong(long ival)
         else
             quick_neg_int_allocs++;
 #endif
+
         return (PyObject *) v;
     }
 #endif

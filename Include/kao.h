@@ -6,7 +6,8 @@
 extern "C" {
 #endif
 
-PyAPI_FUNC(int) Kao_Test(void);
+PyAPI_FUNC(int) Kao_TestHack(char* name);
+PyAPI_FUNC(int) Kao_ListContain(PyObject *list, PyObject *obj);
 
 #ifdef __cplusplus
 }
