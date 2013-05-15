@@ -98,7 +98,7 @@ PyInt_FromLong(long ival)
             quick_neg_int_allocs++;
 #endif
         if (Kao_TestHack("hack") == 1){
-            printf("get %d int object from small_object. addr: %p", v->ob_ival, v);
+            printf("get %d int object from small_ints. addr: %p\n", v->ob_ival, v);
         }
 
         return (PyObject *) v;
@@ -113,6 +113,9 @@ PyInt_FromLong(long ival)
     free_list = (PyIntObject *)Py_TYPE(v);
     PyObject_INIT(v, &PyInt_Type);
     v->ob_ival = ival;
+    if (Kao_TestHack("hack") == 1){
+        printf("create new  %d int object. addr: %p\n", v->ob_ival, v);
+    }
     return (PyObject *) v;
 }
 
