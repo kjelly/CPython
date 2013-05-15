@@ -12,7 +12,7 @@ int Kao_ListContain(PyObject *list, PyObject *obj){
     Py_ssize_t size;
     int result = 0;
     Py_ssize_t i;
-    if ( obj != NULL){
+    if ( list != NULL){
         size = PyList_Size(obj);
         for(i = 0; i < size ; i++){
             item = PyList_GetItem(obj, i);
