@@ -1,9 +1,8 @@
 #include "Python.h"
 int Kao_TestHack(char* name){
     
-    PyObject *list = PySys_GetObject("argv");
-    PyObject *obj = PyString_FromString(name);
-    return Kao_ListContain(list, obj);
+    PyObject *sys_attr = PySys_GetObject(name);
+    return (sys_attr != NULL);
 }
 
 
