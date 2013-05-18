@@ -38,3 +38,7 @@ nosetests.xml
 
 *.log
 python
+
+
+*~
+*.orig
