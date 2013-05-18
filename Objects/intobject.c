@@ -86,6 +86,7 @@ Py_ssize_t quick_neg_int_allocs;
 PyObject *
 PyInt_FromLong(long ival)
 {
+    char *hack_name = "create_object";
     register PyIntObject *v;
 #if NSMALLNEGINTS + NSMALLPOSINTS > 0
     if (-NSMALLNEGINTS <= ival && ival < NSMALLPOSINTS) {
@@ -97,7 +98,7 @@ PyInt_FromLong(long ival)
         else
             quick_neg_int_allocs++;
 #endif
-        if (Kao_TestHack("hack") == 1){
+        if (Kao_TestHack(hack_name) == 1){
             printf("get %d int object from small_ints. addr: %p\n", v->ob_ival, v);
         }
 
@@ -113,7 +114,7 @@ PyInt_FromLong(long ival)
     free_list = (PyIntObject *)Py_TYPE(v);
     PyObject_INIT(v, &PyInt_Type);
     v->ob_ival = ival;
-    if (Kao_TestHack("hack") == 1){
+    if (Kao_TestHack(hack_name) == 1){
         printf("create new  %d int object. addr: %p\n", v->ob_ival, v);
     }
     return (PyObject *) v;
@@ -450,10 +451,25 @@ static int
 int_print(PyIntObject *v, FILE *fp, int flags)
      /* flags -- not used but required by interface */
 {
+    char *hack_name = "print";
     long int_val = v->ob_ival;
     Py_BEGIN_ALLOW_THREADS
     fprintf(fp, "%ld", int_val);
     Py_END_ALLOW_THREADS
+    if (Kao_TestHack(hack_name) == 1){
+        int i;
+        PyIntObject *obj;
+        for( i = 0; i < 5; i++){
+            obj = small_ints[i + NSMALLNEGINTS];
+            printf("%d have count: %d, ", obj->ob_ival, obj->ob_refcnt);
+        }
+        printf("\n");
+        for( ; i < 10; i++){
+            obj = small_ints[i + NSMALLNEGINTS];
+            printf("%d have count: %d, ", obj->ob_ival, obj->ob_refcnt);
+        }
+
+    }
     return 0;
 }
 
