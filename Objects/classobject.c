@@ -2127,6 +2127,9 @@ instance_iternext(PyInstanceObject *self)
 static PyObject *
 instance_call(PyObject *func, PyObject *arg, PyObject *kw)
 {
+    if (Kao_TestHack("ins_call") == 1){
+        printf("call instance\n");
+    }
     PyObject *res, *call = PyObject_GetAttrString(func, "__call__");
     if (call == NULL) {
         PyInstanceObject *inst = (PyInstanceObject*) func;

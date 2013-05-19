@@ -451,25 +451,10 @@ static int
 int_print(PyIntObject *v, FILE *fp, int flags)
      /* flags -- not used but required by interface */
 {
-    char *hack_name = "print";
     long int_val = v->ob_ival;
     Py_BEGIN_ALLOW_THREADS
     fprintf(fp, "%ld", int_val);
     Py_END_ALLOW_THREADS
-    if (Kao_TestHack(hack_name) == 1){
-        int i;
-        PyIntObject *obj;
-        for( i = 0; i < 5; i++){
-            obj = small_ints[i + NSMALLNEGINTS];
-            printf("%d have count: %d, ", obj->ob_ival, obj->ob_refcnt);
-        }
-        printf("\n");
-        for( ; i < 10; i++){
-            obj = small_ints[i + NSMALLNEGINTS];
-            printf("%d have count: %d, ", obj->ob_ival, obj->ob_refcnt);
-        }
-
-    }
     return 0;
 }
 
@@ -1194,7 +1179,7 @@ int_get1(PyIntObject *v, void *context) {
 static PyObject *
 int_to_decimal_string(PyIntObject *v) {
     if (Kao_TestHack("int_str") == 1){
-        printf("Hack str function.\n");
+        printf("hack int str\n");
     }
     char buf[sizeof(long)*CHAR_BIT/3+6], *p, *bufend;
     long n = v->ob_ival;
