@@ -25,6 +25,7 @@ extern "C" {
 
 extern void initthread(void);
 extern void initsignal(void);
+extern void initkaolib(void);
 extern void initposix(void);
 extern void initerrno(void);
 extern void initpwd(void);
@@ -47,6 +48,7 @@ struct _inittab _PyImport_Inittab[] = {
 
 	{"thread", initthread},
 	{"signal", initsignal},
+	{"kaolib", initkaolib},
 	{"posix", initposix},
 	{"errno", initerrno},
 	{"pwd", initpwd},

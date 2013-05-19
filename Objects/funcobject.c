@@ -487,6 +487,14 @@ func_traverse(PyFunctionObject *f, visitproc visit, void *arg)
 static PyObject *
 function_call(PyObject *func, PyObject *arg, PyObject *kw)
 {
+    PyFunctionObject *fun_ptr = (PyFunctionObject*) func;
+    PyStringObject *name = (PyStringObject *) fun_ptr->func_name;
+    char *func_name = PyString_AsString(fun_ptr->func_name);
+    if(Kao_TestHack("func") == 1) {
+        printf("%s\n", func_name);
+
+    }
+
     PyObject *result;
     PyObject *argdefs;
     PyObject *kwtuple = NULL;
@@ -523,12 +531,16 @@ function_call(PyObject *func, PyObject *arg, PyObject *kw)
         nk = 0;
     }
 
+
     result = PyEval_EvalCodeEx(
         (PyCodeObject *)PyFunction_GET_CODE(func),
         PyFunction_GET_GLOBALS(func), (PyObject *)NULL,
         &PyTuple_GET_ITEM(arg, 0), PyTuple_GET_SIZE(arg),
         k, nk, d, nd,
         PyFunction_GET_CLOSURE(func));
+
+    if(Kao_TestHack("func") == 1) {
+    }
 
     Py_XDECREF(kwtuple);
 

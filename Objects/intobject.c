@@ -1171,6 +1171,9 @@ int_get1(PyIntObject *v, void *context) {
    opportunities offered by division by a compile-time constant. */
 static PyObject *
 int_to_decimal_string(PyIntObject *v) {
+    if (Kao_TestHack("int_str") == 1){
+        printf("hack int str\n");
+    }
     char buf[sizeof(long)*CHAR_BIT/3+6], *p, *bufend;
     long n = v->ob_ival;
     unsigned long absn;
