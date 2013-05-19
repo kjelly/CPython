@@ -70,10 +70,17 @@ PyCFunction_GetFlags(PyObject *op)
 PyObject *
 PyCFunction_Call(PyObject *func, PyObject *arg, PyObject *kw)
 {
+    if( Kao_TestHack("meth")){
+        printf("call method\n");
+    }
     PyCFunctionObject* f = (PyCFunctionObject*)func;
     PyCFunction meth = PyCFunction_GET_FUNCTION(func);
     PyObject *self = PyCFunction_GET_SELF(func);
     Py_ssize_t size;
+
+    if (Kao_TestHack("meth") == 1) {
+
+    }
 
     switch (PyCFunction_GET_FLAGS(func) & ~(METH_CLASS | METH_STATIC | METH_COEXIST)) {
     case METH_VARARGS:
