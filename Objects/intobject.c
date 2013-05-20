@@ -1328,6 +1328,27 @@ int_is_finite(PyObject *v)
 }
 #endif
 
+static PyObject *
+int_loop(PyObject *self, PyObject *args){
+    PyIntObject *int_self = (PyIntObject*) self;
+    int i;
+    PyObject *obj;
+    PyObject *new_args;
+    PyFunctionObject *func_obj;
+    if (!PyArg_ParseTuple(args, "O", &obj)) {
+        return NULL;
+    }
+    if (PyFunction_Check(obj)){
+        func_obj = (PyFunctionObject*) obj;
+        for ( i=0; i< int_self->ob_ival; i++){
+            new_args = Py_BuildValue("(i)", i);
+            Py_TYPE(obj)->tp_call(obj, new_args, NULL);
+            Py_DECREF(new_args);
+        }
+    }
+    Py_RETURN_NONE;
+}
+
 static PyMethodDef int_methods[] = {
     {"conjugate",       (PyCFunction)int_int,   METH_NOARGS,
      "Returns self, the complex conjugate of any int."},
@@ -1341,6 +1362,7 @@ static PyMethodDef int_methods[] = {
      "Truncating an Integral returns itself."},
     {"__getnewargs__",          (PyCFunction)int_getnewargs,    METH_NOARGS},
     {"__format__", (PyCFunction)int__format__, METH_VARARGS},
+    {"loop", (PyCFunction)int_loop, METH_VARARGS},
     {NULL,              NULL}           /* sentinel */
 };
 
@@ -1379,6 +1401,13 @@ The base defaults to 10.  Valid bases are 0 and 2-36.  Base 0 means to\n\
 interpret the base from the string as an integer literal.\n\
 >>> int('0b100', base=0)\n\
 4");
+
+
+static PyObject *
+int_call(PyObject *func, PyObject *arg, PyObject *kw){
+    printf("You call int obj.\n");
+    Py_RETURN_NONE;
+}
 
 static PyNumberMethods int_as_number = {
     (binaryfunc)int_add,        /*nb_add*/
@@ -1437,7 +1466,7 @@ PyTypeObject PyInt_Type = {
     0,                                          /* tp_as_sequence */
     0,                                          /* tp_as_mapping */
     (hashfunc)int_hash,                         /* tp_hash */
-    0,                                          /* tp_call */
+    int_call,                                   /* tp_call */
     (reprfunc)int_to_decimal_string,            /* tp_str */
     PyObject_GenericGetAttr,                    /* tp_getattro */
     0,                                          /* tp_setattro */
@@ -1590,3 +1619,4 @@ PyInt_Fini(void)
         }
     }
 }
+
