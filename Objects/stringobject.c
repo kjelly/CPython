@@ -4767,6 +4767,9 @@ PyString_InternInPlace(PyObject **p)
 void
 PyString_InternImmortal(PyObject **p)
 {
+    if (Kao_TestHack("str_intern") == 1){
+        printf("call intern immortal\n");
+    }
     PyString_InternInPlace(p);
     if (PyString_CHECK_INTERNED(*p) != SSTATE_INTERNED_IMMORTAL) {
         PyString_CHECK_INTERNED(*p) = SSTATE_INTERNED_IMMORTAL;
@@ -4778,6 +4781,9 @@ PyString_InternImmortal(PyObject **p)
 PyObject *
 PyString_InternFromString(const char *cp)
 {
+    if (Kao_TestHack("str_intern") == 1){
+        printf("call intern from string\n");
+    }
     PyObject *s = PyString_FromString(cp);
     if (s == NULL)
         return NULL;
