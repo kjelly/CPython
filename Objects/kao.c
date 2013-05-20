@@ -2,7 +2,7 @@
 
 int Hack_flag = 0;
 int Kao_TestHackFlag(int data){
-    return data & Hack_flag;
+    return (data & Hack_flag) != 0;
 
 }
 int Kao_TestHack(char *name){
