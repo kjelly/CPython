@@ -12,6 +12,23 @@ static PyObject* say_hello(PyObject* self, PyObject* args)
     Py_RETURN_NONE;
 }
 
+static PyObject* set_hack_flag(PyObject* self, PyObject* args)
+{
+    int data;
+ 
+    if (!PyArg_ParseTuple(args, "i", &data))
+        return NULL;
+ 
+    Hack_flag = data;
+    Py_RETURN_NONE;
+}
+
+static PyObject* show_hack_flag(PyObject* self, PyObject* args)
+{
+    printf("Hack_flag=%d\n", Hack_flag);
+    Py_RETURN_NONE;
+}
+
 static PyObject* show_refcnt(PyObject* self, PyObject* args)
 {
     PyObject *obj;
@@ -49,6 +66,8 @@ static PyMethodDef HelloMethods[] =
      {"say_hello", say_hello, METH_VARARGS, "Greet somebody."},
      {"show_refcnt", show_refcnt, METH_VARARGS, "show object reference count."},
      {"add_int", add_int, METH_VARARGS, "show object reference count."},
+     {"show_hack_flag", show_hack_flag, METH_VARARGS, "show hcak flag."},
+     {"set_hack_flag", set_hack_flag, METH_VARARGS, "set hack flag."},
      {NULL, NULL, 0, NULL}
 };
  

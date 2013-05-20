@@ -1,5 +1,11 @@
 #include "Python.h"
-int Kao_TestHack(char* name){
+
+int Hack_flag = 0;
+int Kao_TestHackFlag(int data){
+    return data & Hack_flag;
+
+}
+int Kao_TestHack(char *name){
     
     PyObject *sys_attr = PySys_GetObject(name);
     return (sys_attr != NULL);

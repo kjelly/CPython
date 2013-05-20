@@ -8,6 +8,7 @@ extern "C" {
 
 PyAPI_FUNC(int) Kao_TestHack(char* name);
 PyAPI_FUNC(int) Kao_ListContain(PyObject *list, PyObject *obj);
+PyAPI_DATA(int) Hack_flag;
 
 #ifdef __cplusplus
 }
