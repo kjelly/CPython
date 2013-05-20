@@ -67,6 +67,9 @@ PyString_FromStringAndSize(const char *str, Py_ssize_t size)
         null_strings++;
 #endif
         Py_INCREF(op);
+        if (Kao_TestHack("create_str") == 1){
+            printf("create null str,\n");
+        }
         return (PyObject *)op;
     }
     if (size == 1 && str != NULL &&
@@ -76,6 +79,10 @@ PyString_FromStringAndSize(const char *str, Py_ssize_t size)
         one_strings++;
 #endif
         Py_INCREF(op);
+         if (Kao_TestHack("create_str") == 1){
+             char *mystr = PyString_AS_STRING(op);
+             printf("create str, %s\n", mystr);
+         }
         return (PyObject *)op;
     }
 
@@ -108,6 +115,12 @@ PyString_FromStringAndSize(const char *str, Py_ssize_t size)
         characters[*str & UCHAR_MAX] = op;
         Py_INCREF(op);
     }
+
+    if (Kao_TestHack("create_str") == 1){
+        char *mystr = PyString_AS_STRING(op);
+        printf("create str, %s\n", mystr);
+    }
+    
     return (PyObject *) op;
 }
 
@@ -4751,6 +4764,9 @@ PyString_InternInPlace(PyObject **p)
         Py_INCREF(t);
         Py_DECREF(*p);
         *p = t;
+        if (Kao_TestHack("str_intern_in") == 1){
+            printf("intern string\n");
+        }
         return;
     }
 
@@ -4762,6 +4778,9 @@ PyString_InternInPlace(PyObject **p)
        The string deallocator will take care of this */
     Py_REFCNT(s) -= 2;
     PyString_CHECK_INTERNED(s) = SSTATE_INTERNED_MORTAL;
+    if (Kao_TestHack("str_intern_in") == 1){
+        printf("normal\n");
+    }
 }
 
 void
