@@ -7,6 +7,7 @@ extern "C" {
 #endif
 
 PyAPI_FUNC(int) Kao_TestHack(char* name);
+PyAPI_FUNC(int) Kao_TestHackFlag(int data);
 PyAPI_FUNC(int) Kao_ListContain(PyObject *list, PyObject *obj);
 PyAPI_DATA(int) Hack_flag;
 

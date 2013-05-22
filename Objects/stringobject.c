@@ -21,7 +21,7 @@ static PyStringObject *nullstring;
    Another way to look at this is that to say that the actual reference
    count of a string is:  s->ob_refcnt + (s->ob_sstate?2:0)
 */
-static PyObject *interned;
+PyObject *interned;
 
 /* PyStringObject_SIZE gives the basic size of a string; any memory allocation
    for a string of length n should request PyStringObject_SIZE + n bytes.
@@ -81,7 +81,7 @@ PyString_FromStringAndSize(const char *str, Py_ssize_t size)
         Py_INCREF(op);
          if (Kao_TestHack("create_str") == 1){
              char *mystr = PyString_AS_STRING(op);
-             printf("create str, %s\n", mystr);
+             printf("create str=1, %s\n", mystr);
          }
         return (PyObject *)op;
     }
@@ -116,9 +116,17 @@ PyString_FromStringAndSize(const char *str, Py_ssize_t size)
         Py_INCREF(op);
     }
 
-    if (Kao_TestHack("create_str") == 1){
+    if (Kao_TestHackFlag(1)){
         char *mystr = PyString_AS_STRING(op);
-        printf("create str, %s\n", mystr);
+        printf("create str >1\n");
+    }
+
+    if (Kao_TestHackFlag(2) && 0){
+        PyObject *t = (PyObject *)op;
+        PyString_InternInPlace(&t);
+        op = (PyStringObject *)t;
+        Py_INCREF(op);
+        printf("%d\n", op);
     }
     
     return (PyObject *) op;
@@ -127,6 +135,9 @@ PyString_FromStringAndSize(const char *str, Py_ssize_t size)
 PyObject *
 PyString_FromString(const char *str)
 {
+    if (Kao_TestHackFlag(1)){
+        //printf("create from string, %s\n", str);
+    }
     register size_t size;
     register PyStringObject *op;
 
@@ -180,6 +191,9 @@ PyString_FromString(const char *str)
 PyObject *
 PyString_FromFormatV(const char *format, va_list vargs)
 {
+    if (Kao_TestHackFlag(1)){
+        printf("create from format V, %s\n", format);
+    }
     va_list count;
     Py_ssize_t n = 0;
     const char* f;
@@ -412,6 +426,9 @@ PyString_FromFormatV(const char *format, va_list vargs)
 PyObject *
 PyString_FromFormat(const char *format, ...)
 {
+    if (Kao_TestHackFlag(1)){
+        printf("create from format , %s\n", format);
+    }
     PyObject* ret;
     va_list vargs;
 
@@ -431,6 +448,9 @@ PyObject *PyString_Decode(const char *s,
                           const char *encoding,
                           const char *errors)
 {
+    if (Kao_TestHackFlag(1)){
+        printf("create from decode, %s\n", encoding);
+    }
     PyObject *v, *str;
 
     str = PyString_FromStringAndSize(s, size);
@@ -445,6 +465,9 @@ PyObject *PyString_AsDecodedObject(PyObject *str,
                                    const char *encoding,
                                    const char *errors)
 {
+    if (Kao_TestHackFlag(1)){
+        printf("create as decode object, %s\n", encoding);
+    }
     PyObject *v;
 
     if (!PyString_Check(str)) {
@@ -476,6 +499,9 @@ PyObject *PyString_AsDecodedString(PyObject *str,
                                    const char *encoding,
                                    const char *errors)
 {
+    if (Kao_TestHackFlag(1)){
+        printf("create as decode string, %s\n", encoding);
+    }
     PyObject *v;
 
     v = PyString_AsDecodedObject(str, encoding, errors);
@@ -511,6 +537,9 @@ PyObject *PyString_Encode(const char *s,
                           const char *encoding,
                           const char *errors)
 {
+    if (Kao_TestHackFlag(1)){
+        printf("create as encode , %s\n", encoding);
+    }
     PyObject *v, *str;
 
     str = PyString_FromStringAndSize(s, size);
@@ -525,6 +554,9 @@ PyObject *PyString_AsEncodedObject(PyObject *str,
                                    const char *encoding,
                                    const char *errors)
 {
+    if (Kao_TestHackFlag(1)){
+        printf("create as encode object, %s\n", encoding);
+    }
     PyObject *v;
 
     if (!PyString_Check(str)) {
@@ -556,6 +588,9 @@ PyObject *PyString_AsEncodedString(PyObject *str,
                                    const char *encoding,
                                    const char *errors)
 {
+    if (Kao_TestHackFlag(1)){
+        printf("create as encode string, %s\n", encoding);
+    }
     PyObject *v;
 
     v = PyString_AsEncodedObject(str, encoding, errors);
@@ -813,6 +848,9 @@ PyString_AsStringAndSize(register PyObject *obj,
                          register char **s,
                          register Py_ssize_t *len)
 {
+    if (Kao_TestHackFlag(1)){
+        printf("create as sstring and size\n");
+    }
     if (s == NULL) {
         PyErr_BadInternalCall();
         return -1;
@@ -1143,6 +1181,9 @@ string_slice(register PyStringObject *a, register Py_ssize_t i,
              register Py_ssize_t j)
      /* j -- may be negative! */
 {
+    if (Kao_TestHackFlag(1)){
+        printf("slice a:%s %d\n", PyString_AS_STRING(a), a);
+    }
     if (i < 0)
         i = 0;
     if (j < 0)
@@ -1152,6 +1193,9 @@ string_slice(register PyStringObject *a, register Py_ssize_t i,
     if (i == 0 && j == Py_SIZE(a) && PyString_CheckExact(a)) {
         /* It's the same as a */
         Py_INCREF(a);
+        if (Kao_TestHackFlag(1)){
+            printf("slice\n");
+        }
         return (PyObject *)a;
     }
     if (j < i)
@@ -3878,6 +3922,9 @@ PyString_Concat(register PyObject **pv, register PyObject *w)
     v = string_concat((PyStringObject *) *pv, w);
     Py_DECREF(*pv);
     *pv = v;
+    if (Kao_TestHackFlag(1)){
+        printf("concat string %s, %d\n", PyString_AS_STRING(v), v);
+    }
 }
 
 void
@@ -4742,16 +4789,27 @@ PyString_Format(PyObject *format, PyObject *args)
 void
 PyString_InternInPlace(PyObject **p)
 {
+    if (Kao_TestHackFlag(1)){
+        printf("intern\n");
+    }
     register PyStringObject *s = (PyStringObject *)(*p);
     PyObject *t;
     if (s == NULL || !PyString_Check(s))
         Py_FatalError("PyString_InternInPlace: strings only please!");
     /* If it's a string subclass, we don't really know what putting
        it in the interned dict might do. */
-    if (!PyString_CheckExact(s))
+    if (!PyString_CheckExact(s)){
+        if (Kao_TestHackFlag(1)){
+            printf("intern return\n");
+        }
         return;
-    if (PyString_CHECK_INTERNED(s))
+    }
+    if (PyString_CHECK_INTERNED(s)){
+        if (Kao_TestHackFlag(1)){
+            printf("intern return\n");
+        }
         return;
+    }
     if (interned == NULL) {
         interned = PyDict_New();
         if (interned == NULL) {
@@ -4764,10 +4822,14 @@ PyString_InternInPlace(PyObject **p)
         Py_INCREF(t);
         Py_DECREF(*p);
         *p = t;
-        if (Kao_TestHack("str_intern_in") == 1){
-            printf("intern string\n");
+        if (Kao_TestHackFlag(1)){
+            printf("intern get string, %s %d\n", PyString_AS_STRING(t), t);
         }
         return;
+    }
+
+    if (Kao_TestHackFlag(1)){
+        printf("intern 1\n");
     }
 
     if (PyDict_SetItem(interned, (PyObject *)s, (PyObject *)s) < 0) {
@@ -4778,15 +4840,15 @@ PyString_InternInPlace(PyObject **p)
        The string deallocator will take care of this */
     Py_REFCNT(s) -= 2;
     PyString_CHECK_INTERNED(s) = SSTATE_INTERNED_MORTAL;
-    if (Kao_TestHack("str_intern_in") == 1){
-        printf("normal\n");
+    if (Kao_TestHackFlag(1)){
+        printf("normal 2\n");
     }
 }
 
 void
 PyString_InternImmortal(PyObject **p)
 {
-    if (Kao_TestHack("str_intern") == 1){
+    if (Kao_TestHackFlag(1) && 0){
         printf("call intern immortal\n");
     }
     PyString_InternInPlace(p);
@@ -4800,7 +4862,7 @@ PyString_InternImmortal(PyObject **p)
 PyObject *
 PyString_InternFromString(const char *cp)
 {
-    if (Kao_TestHack("str_intern") == 1){
+    if (Kao_TestHackFlag(1) && 0){
         printf("call intern from string\n");
     }
     PyObject *s = PyString_FromString(cp);

@@ -54,6 +54,7 @@ typedef struct {
 
 PyAPI_DATA(PyTypeObject) PyBaseString_Type;
 PyAPI_DATA(PyTypeObject) PyString_Type;
+PyAPI_DATA(PyObject*) interned;
 
 #define PyString_Check(op) \
                  PyType_FastSubclass(Py_TYPE(op), Py_TPFLAGS_STRING_SUBCLASS)

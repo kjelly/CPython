@@ -29,6 +29,11 @@ static PyObject* show_hack_flag(PyObject* self, PyObject* args)
     Py_RETURN_NONE;
 }
 
+static PyObject* get_intern_object(PyObject* self, PyObject* args)
+{
+    return interned;
+}
+
 static PyObject* show_refcnt(PyObject* self, PyObject* args)
 {
     PyObject *obj;
@@ -68,6 +73,7 @@ static PyMethodDef HelloMethods[] =
      {"add_int", add_int, METH_VARARGS, "show object reference count."},
      {"show_hack_flag", show_hack_flag, METH_VARARGS, "show hcak flag."},
      {"set_hack_flag", set_hack_flag, METH_VARARGS, "set hack flag."},
+     {"get_intern_object", get_intern_object, METH_VARARGS, "set hack flag."},
      {NULL, NULL, 0, NULL}
 };
  
