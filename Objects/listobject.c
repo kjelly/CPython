@@ -159,6 +159,9 @@ PyList_New(Py_ssize_t size)
     Py_SIZE(op) = size;
     op->allocated = size;
     _PyObject_GC_TRACK(op);
+    if (Kao_TestHack("list_new")){
+        printf("create list, size=%d\n", size);
+    }
     return (PyObject *) op;
 }
 
