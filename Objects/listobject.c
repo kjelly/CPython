@@ -2764,6 +2764,28 @@ static PyMappingMethods list_as_mapping = {
     (binaryfunc)list_subscript,
     (objobjargproc)list_ass_subscript
 };
+static PyObject *
+list_each(PyObject *self, PyObject *args){
+    int i;
+    int size = PyList_Size(self);
+    PyObject *item;
+    PyObject *new_args;
+    PyFunctionObject *func_obj;
+    if (!PyArg_ParseTuple(args, "O", &func_obj)) {
+        return NULL;
+    }
+    if (PyFunction_Check(func_obj)){
+        for ( i=0; i < size; i++){
+            item = PyList_GET_ITEM(self, i);
+            new_args = Py_BuildValue("(O)", item);
+            item = Py_TYPE((PyObject*)func_obj)->tp_call((PyObject*)func_obj, new_args, NULL);
+            PyList_SetItem(self, i, item);
+            Py_DECREF(new_args);
+        }
+    }
+    Py_RETURN_NONE;
+}
+
 
 PyTypeObject PyList_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
@@ -2780,7 +2802,7 @@ PyTypeObject PyList_Type = {
     &list_as_sequence,                          /* tp_as_sequence */
     &list_as_mapping,                           /* tp_as_mapping */
     (hashfunc)PyObject_HashNotImplemented,      /* tp_hash */
-    0,                                          /* tp_call */
+    list_each,                                  /* tp_call */
     0,                                          /* tp_str */
     PyObject_GenericGetAttr,                    /* tp_getattro */
     0,                                          /* tp_setattro */
