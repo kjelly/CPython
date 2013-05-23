@@ -1065,6 +1065,9 @@ string_length(PyStringObject *a)
 static PyObject *
 string_concat(register PyStringObject *a, register PyObject *bb)
 {
+    if (Kao_TestHack("str_concat")){
+        printf("concat string %s\n", PyString_AS_STRING(a));
+    }
     register Py_ssize_t size;
     register PyStringObject *op;
     if (!PyString_Check(bb)) {
@@ -1643,6 +1646,9 @@ iterable.  The separator between elements is S.");
 static PyObject *
 string_join(PyStringObject *self, PyObject *orig)
 {
+    if (Kao_TestHack("str_join")){
+        printf("call join\n");
+    }
     char *sep = PyString_AS_STRING(self);
     const Py_ssize_t seplen = PyString_GET_SIZE(self);
     PyObject *res = NULL;
@@ -3913,6 +3919,9 @@ void
 PyString_Concat(register PyObject **pv, register PyObject *w)
 {
     register PyObject *v;
+    if (Kao_TestHack("str_concat")){
+        printf("concat string %s, %d\n", PyString_AS_STRING(v), v);
+    }
     if (*pv == NULL)
         return;
     if (w == NULL || !PyString_Check(*pv)) {
@@ -3922,9 +3931,6 @@ PyString_Concat(register PyObject **pv, register PyObject *w)
     v = string_concat((PyStringObject *) *pv, w);
     Py_DECREF(*pv);
     *pv = v;
-    if (Kao_TestHackFlag(1)){
-        printf("concat string %s, %d\n", PyString_AS_STRING(v), v);
-    }
 }
 
 void
