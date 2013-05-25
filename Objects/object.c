@@ -709,14 +709,25 @@ try_3way_compare(PyObject *v, PyObject *w)
        which has the same return conventions as this function. */
 
     f = v->ob_type->tp_compare;
-    if (PyInstance_Check(v))
+    if (PyInstance_Check(v)){
+        if (Kao_TestHackFlag(128)){
+            printf("use v tp_compare\n");
+        }
         return (*f)(v, w);
-    if (PyInstance_Check(w))
+    }
+    if (PyInstance_Check(w)){
+        if (Kao_TestHackFlag(128)){
+            printf("use w tp_compare\n");
+        }
         return (*w->ob_type->tp_compare)(v, w);
+    }
 
     /* If both have the same (non-NULL) tp_compare, use it. */
     if (f != NULL && f == w->ob_type->tp_compare) {
         c = (*f)(v, w);
+        if (Kao_TestHackFlag(128)){
+            printf("both have the same\n");
+        }
         return adjust_tp_compare(c);
     }
 
@@ -735,12 +746,23 @@ try_3way_compare(PyObject *v, PyObject *w)
        happen with a user-defined nb_coerce).
     */
     c = PyNumber_CoerceEx(&v, &w);
-    if (c < 0)
+    if (c < 0){
+        if (Kao_TestHackFlag(128)){
+            printf("return -2\n");
+        }
         return -2;
-    if (c > 0)
+    }
+    if (c > 0){
+        if (Kao_TestHackFlag(128)){
+            printf("return 2\n");
+        }
         return 2;
+    }
     f = v->ob_type->tp_compare;
     if (f != NULL && f == w->ob_type->tp_compare) {
+        if (Kao_TestHackFlag(128)){
+            printf("return adjust_tp_compare\n");
+        }
         c = (*f)(v, w);
         Py_DECREF(v);
         Py_DECREF(w);
@@ -750,6 +772,9 @@ try_3way_compare(PyObject *v, PyObject *w)
     /* No comparison defined */
     Py_DECREF(v);
     Py_DECREF(w);
+    if (Kao_TestHackFlag(128)){
+        printf("return adjust_tp_compare\n");
+    }
     return 2;
 }
 
@@ -783,6 +808,9 @@ default_3way_compare(PyObject *v, PyObject *w)
         return 1;
 
     /* different type: compare type names; numbers are smaller */
+    if (Kao_TestHackFlag(128)){
+        printf("different type: compare type names; numbers are smaller.\n");
+    }
     if (PyNumber_Check(v))
         vname = "";
     else
@@ -896,6 +924,9 @@ static PyObject *
 try_3way_to_rich_compare(PyObject *v, PyObject *w, int op)
 {
     int c;
+    if (Kao_TestHackFlag(128)){
+        printf("try_3way_to_rich_compare\n");
+    }
 
     c = try_3way_compare(v, w);
     if (c >= 2) {
@@ -911,8 +942,11 @@ try_3way_to_rich_compare(PyObject *v, PyObject *w, int op)
 
         c = default_3way_compare(v, w);
     }
-    if (c <= -2)
+    if (c <= -2){
+        printf("try_3way_compare return NULL\n");
         return NULL;
+
+    }
     return convert_3way_to_object(op, c);
 }
 
@@ -931,6 +965,11 @@ do_richcmp(PyObject *v, PyObject *w, int op)
     if (res != Py_NotImplemented)
         return res;
     Py_DECREF(res);
+
+    if (Kao_TestHackFlag(128)){
+        printf("This should be run in the csase, 5 < 'T'\n");
+
+    }
 
     return try_3way_to_rich_compare(v, w, op);
 }

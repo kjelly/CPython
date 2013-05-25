@@ -1190,6 +1190,9 @@ string_item(PyStringObject *a, register Py_ssize_t i)
 static PyObject*
 string_richcompare(PyStringObject *a, PyStringObject *b, int op)
 {
+    if (Kao_TestHackFlag(64)){
+        printf("call string %s %s %p %p\n", PyString_AS_STRING(a), PyString_AS_STRING(b), a, b);
+    }
     int c;
     Py_ssize_t len_a, len_b;
     Py_ssize_t min_len;
@@ -1198,6 +1201,11 @@ string_richcompare(PyStringObject *a, PyStringObject *b, int op)
     /* Make sure both arguments are strings. */
     if (!(PyString_Check(a) && PyString_Check(b))) {
         result = Py_NotImplemented;
+        if (Kao_TestHackFlag(64)){
+            int b=5;
+            int c=3;
+            printf("Not implement\n");
+        }
         goto out;
     }
     if (a == b) {

@@ -456,6 +456,9 @@ int_compare(PyIntObject *v, PyIntObject *w)
 {
     register long i = v->ob_ival;
     register long j = w->ob_ival;
+    if (Kao_TestHack("int_cmp")){
+        printf("call int, %d %d\n", i, j);
+    }
     return (i < j) ? -1 : (i > j) ? 1 : 0;
 }
 
